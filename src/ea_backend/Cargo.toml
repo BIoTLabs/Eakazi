@@ -9,6 +9,23 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-candid = "0.8"
-ic-cdk = "0.7"
-ic-cdk-timers = "0.1" # Feel free to remove this dependency if you don't need timers
+candid = "0.9.11"
+ic-cdk = "0.11.3"
+ic-cdk-macros = "0.8.1"
+serde = "1.0.160"
+candid_derive = "=0.6.4"
+uuid = { version = "1.5.0",features = ["v4","serde","fast-rng","wasm-bindgen","js"] }
+getrandom = { version = "0.2", features = ["custom"] }
+
+[target.wasm32-unknown-unknown.features]
+wasm-bindgen = ["rand/wasm-bindgen"]
+stdweb = ["rand/stdweb"]
+
+[dependencies.rand]
+optional = true
+
+[dependencies.wasm-bindgen]
+optional = true
+
+[when.'cfg(all(feature = "wasm-bindgen", feature = "rand"))']
+features = ["rand/wasm-bindgen"]

@@ -1,3 +1,45 @@
+type Roles = variant {
+    TRAINER;
+    TRAINEE;
+    RECRUITER;
+    ADMIN
+};
+
+
+
+type Profile = record {
+    "name": text;
+    "role" : Roles;
+    "summary": text;
+};
+
+type Course = record {
+"name": text;
+"duration" : text;
+"summary" : text;
+"trainer" : Profile;
+"partakers" : vec Profile;
+};
+
+type Jobs = record {
+"name" : text;
+"about" : text;
+"recruiter" : Profile;
+"applicants" : vec Profile;
+};
+
 service : {
-    "greet": (text) -> (text) query;
+    "createUser": (text, text , text) -> (Profile) query;
+    "getSelf": () -> (Profile) query;
+    "get": (text) -> (Profile) query;
+    "update": (Profile) -> ();
+    "search": (text) -> (opt Profile) query;
+    "createCourse" : (text) -> (Course) query;
+    "getCourse" : (text) -> (Course) query;
+    "getAllCourse" : () -> (vec Course) query;
+    "applyCourse" : (text) -> () query;
+    "createJob" : (text) -> (Jobs) query;
+    "getAllJobs" : ()  -> (vec Jobs) query;
+    "applyJobs" : (principal) -> ();
+
 }
