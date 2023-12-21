@@ -1,45 +1,40 @@
-type Roles = variant {
-    TRAINER;
-    TRAINEE;
-    RECRUITER;
-    ADMIN
-};
-
-
-
-type Profile = record {
-    "name": text;
-    "role" : Roles;
-    "summary": text;
-};
-
 type Course = record {
-"name": text;
-"duration" : text;
-"summary" : text;
-"trainer" : Profile;
-"partakers" : vec Profile;
+  id : text;
+  title : text;
+  creator : principal;
+  applicants : vec principal;
 };
-
 type Jobs = record {
-"name" : text;
-"about" : text;
-"recruiter" : Profile;
-"applicants" : vec Profile;
+  id : text;
+  title : text;
+  creator : principal;
+  applicants : vec principal;
 };
-
+type Profile = record {
+  id : text;
+  occupation : text;
+  resume : vec nat8;
+  role : Roles;
+  description : text;
+  email : text;
+  fullname : text;
+  keywords : vec text;
+  organization : text;
+  skills : vec text;
+  location : text;
+};
+type Roles = variant { TRAINEE; TRAINER; ADMIN; EMPLOYER };
 service : {
-    "createUser": (text, text , text) -> (Profile) query;
-    "getSelf": () -> (Profile) query;
-    "get": (text) -> (Profile) query;
-    "update": (Profile) -> ();
-    "search": (text) -> (opt Profile) query;
-    "createCourse" : (text) -> (Course) query;
-    "getCourse" : (text) -> (Course) query;
-    "getAllCourse" : () -> (vec Course) query;
-    "applyCourse" : (text) -> () query;
-    "createJob" : (text) -> (Jobs) query;
-    "getAllJobs" : ()  -> (vec Jobs) query;
-    "applyJobs" : (principal) -> ();
-
+  applyCourse : (text) -> ();
+  applyJobs : (principal) -> ();
+  createCourse : (text) -> (Course);
+  createJob : (text) -> (Jobs);
+  createUser : (text, text, text) -> (Profile);
+  get : (text) -> (Profile) query;
+  getAllCourse : () -> (vec record { text; Jobs }) query;
+  getAllJobs : () -> (vec record { principal; Jobs }) query;
+  getCourse : (text) -> (Jobs) query;
+  getSelf : () -> (Profile) query;
+  search : (text) -> (opt Profile) query;
+  update : (Profile) -> ();
 }
