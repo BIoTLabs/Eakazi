@@ -1,14 +1,12 @@
-// #[ic_cdk_macros::query]
-// fn greet(name: String) -> String {
-//     format!("Hello, {}!", name)
-// }
-use candid::{CandidType, Deserialize, Principal};
+pub mod certificate;
+
+use candid::{CandidType, Deserialize, Principal,candid_method};
 use ic_cdk::api::call::ManualReply;
 use ic_cdk::api::management_canister::main::raw_rand;
 use ic_cdk_macros::*;
 use std::cell::RefCell;
 use std::collections::BTreeMap;
-
+use certificate::is_canister_custodian;
 type IdStore = BTreeMap<String, Principal>;
 type ProfileStore = BTreeMap<Principal, Profile>;
 type CourseStore = BTreeMap<String, Course>;
@@ -243,5 +241,6 @@ impl Roles {
         }
     }
 }
+
 
 ic_cdk::export_candid!();
