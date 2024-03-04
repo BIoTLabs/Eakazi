@@ -13,6 +13,14 @@ type CourseStore = BTreeMap<String, Course>;
 type JobStore = BTreeMap<Principal, Jobs>;
 
 #[derive(Clone, Debug, Default, CandidType, Deserialize)]
+struct Reviews{
+pub ratings : u8,// to be translated to stars in the app max of 5 ,min of 1
+pub reviewer : String,
+pub title : String,
+pub image : Vec<u8>,
+}
+
+#[derive(Clone, Debug, Default, CandidType, Deserialize)]
 struct Profile {
     pub id: String,
     pub fullname: String,
@@ -25,6 +33,7 @@ struct Profile {
     pub description: String,
     pub keywords: Vec<String>,
     pub skills: Vec<String>,
+    pub reviews : Vec<Reviews>
 }
 #[derive(Clone, Debug, CandidType, Deserialize)]
 struct Course {
@@ -223,6 +232,33 @@ async fn createJob(title: String) -> Jobs {
 fn getAllJobs() -> JobStore {
     JOB_STORE.with(|el| el.borrow().clone())
 }
+#[update]
+fn addReviews(ratings : u8  ,title: String, image : Option<Vec<u8>>,profile_reviewed : String){
+ let mut profile = get(profile_reviewed);
+ let  me = get_self();
+ if let Some (el) = image {
+    let r = Reviews{ ratings, reviewer:  me.fullname, title, image: el };
+    profile.reviews.push(r);
+
+   
+ }else {
+    let r = Reviews{ ratings, reviewer: me.fullname, title, image : vec![0] };
+    profile.reviews.push(r);
+ }
+
+}
+
+#[update]
+fn get_all_reviews() -> Vec<Reviews>{
+get_self().reviews
+}
+
+
+// pub ratings : u8,// to be translated to stars in the app max of 5 ,min of 1
+// pub reviewer : String,
+// pub title : String,
+// pub image : Vec<u8>,
+
 #[derive(CandidType, Deserialize, Debug, Default, Clone, PartialEq)]
 pub enum Roles {
     TRAINER,
